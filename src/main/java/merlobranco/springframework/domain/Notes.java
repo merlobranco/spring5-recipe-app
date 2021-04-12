@@ -20,6 +20,14 @@ public class Notes {
 	@Lob
 	private String recipeNotes;
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public Recipe getRecipe() {
 		return recipe;
 	}

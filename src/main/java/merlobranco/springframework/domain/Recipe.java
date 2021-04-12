@@ -1,11 +1,14 @@
 package merlobranco.springframework.domain;
 
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
@@ -30,6 +33,17 @@ public class Recipe {
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	private Notes notes;
+	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
+	private Set<Ingredient> ingredients;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getDescription() {
 		return description;
@@ -103,4 +117,11 @@ public class Recipe {
 		this.notes = notes;
 	}
 
+	public Set<Ingredient> getIngredients() {
+		return ingredients;
+	}
+
+	public void setIngredients(Set<Ingredient> ingredients) {
+		this.ingredients = ingredients;
+	}
 }
