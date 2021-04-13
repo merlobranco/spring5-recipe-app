@@ -1,4 +1,4 @@
-package repositories;
+package merlobranco.springframework.repositories;
 
 import org.springframework.data.repository.CrudRepository;
 
