@@ -18,7 +18,7 @@ import merlobranco.springframework.repositories.RecipeRepository;
 
 class RecipeServiceImplTest {
 	
-	RecipeServiceImpl recipeService;
+	RecipeService recipeService;
 	
 	@Mock
 	RecipeRepository recipeRepository;
@@ -39,7 +39,7 @@ class RecipeServiceImplTest {
 		
 		Set<Recipe> recipes = recipeService.getRecipes();
 		assertEquals(recipes.size(), 1);
-		verify(recipeRepository, times(1));
+		verify(recipeRepository, times(1)).findAll();
 	}
 
 }
