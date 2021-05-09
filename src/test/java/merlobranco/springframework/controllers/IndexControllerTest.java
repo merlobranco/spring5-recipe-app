@@ -14,9 +14,11 @@ import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
@@ -24,8 +26,10 @@ import org.springframework.ui.Model;
 import merlobranco.springframework.domain.Recipe;
 import merlobranco.springframework.services.RecipeService;
 
+@ExtendWith(MockitoExtension.class)
 class IndexControllerTest {
 	
+	@InjectMocks
 	IndexController indexController;
 	
 	@Mock
@@ -36,7 +40,6 @@ class IndexControllerTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
 		indexController = new IndexController(recipeService);
 	}
 
@@ -61,7 +64,7 @@ class IndexControllerTest {
 		recipe.setId(1L);
 		recipes.add(recipe);
 		
-		when(recipeService.getRecipes()).thenReturn(recipes);
+		when(recipeService.findAll()).thenReturn(recipes);
 		
 		ArgumentCaptor<Set<Recipe>> argumentCaptor = ArgumentCaptor.forClass(Set.class);
 		
@@ -70,7 +73,7 @@ class IndexControllerTest {
 		
 		// Then
 		assertEquals("index", viewName);
-		verify(recipeService, times(1)).getRecipes();
+		verify(recipeService, times(1)).findAll();
 		verify(model, times(1)).addAttribute(eq("recipes"), argumentCaptor.capture());
 		Set<Recipe> setInController = argumentCaptor.getValue();
 		assertEquals(2, setInController.size());
