@@ -17,6 +17,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import merlobranco.springframework.converters.RecipeCommandToRecipe;
+import merlobranco.springframework.converters.RecipeToRecipeCommand;
 import merlobranco.springframework.domain.Recipe;
 import merlobranco.springframework.repositories.RecipeRepository;
 
@@ -27,6 +29,12 @@ class RecipeServiceImplTest {
 	
 	@Mock
 	RecipeRepository recipeRepository;
+	
+	@Mock
+    RecipeToRecipeCommand recipeToRecipeCommand;
+
+    @Mock
+    RecipeCommandToRecipe recipeCommandToRecipe;
 	
 	@InjectMocks
 	RecipeServiceImpl recipeService;
