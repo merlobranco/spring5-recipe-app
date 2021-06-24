@@ -2,6 +2,8 @@ package merlobranco.springframework.services;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -17,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import merlobranco.springframework.commands.RecipeCommand;
 import merlobranco.springframework.converters.RecipeCommandToRecipe;
 import merlobranco.springframework.converters.RecipeToRecipeCommand;
 import merlobranco.springframework.domain.Recipe;
@@ -62,12 +65,34 @@ class RecipeServiceImplTest {
 	
 	@Test
 	void testFindById() {
+		// Given
 		when(recipeRepository.findById(anyLong())).thenReturn(Optional.of(returnRecipe));
 		
+		// When
 		Recipe recipe = recipeService.findById(ID);
 		
+		// Then
 		assertNotNull(recipe, "Null recipe returned");
 		assertEquals(ID, recipe.getId());
 		verify(recipeRepository).findById(ID);
 	}
+	
+	@Test
+	void findCommandById() {
+		// Given
+        when(recipeRepository.findById(anyLong())).thenReturn(Optional.of(returnRecipe));
+        RecipeCommand recipeCommand = new RecipeCommand();
+        recipeCommand.setId(ID);
+        when(recipeToRecipeCommand.convert(any())).thenReturn(recipeCommand);
+
+        // When
+        RecipeCommand recipeCommandById = recipeService.findCommandById(ID);
+
+        // Then
+        assertNotNull(recipeCommandById, "Null recipe returned");
+        verify(recipeRepository, times(1)).findById(anyLong());
+        verify(recipeRepository, never()).findAll();
+		
+	}
+	
 }

@@ -33,4 +33,11 @@ public class RecipeServiceImpl extends JpaService<Recipe, Long> implements Recip
 	     log.debug("Saved Recipe Id: " + savedRecipe.getId());
 	     return recipeToRecipeCommand.convert(savedRecipe);
 	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public RecipeCommand findCommandById(Long id) {
+		Recipe recipe = recipeRepository.findById(id).orElse(null);
+		return recipeToRecipeCommand.convert(recipe);
+	}
 }
