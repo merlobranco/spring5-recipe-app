@@ -122,5 +122,14 @@ class RecipeControllerTest {
         .andExpect(view().name("redirect:/recipe/show/2"));
     }
 	
+	@Test
+    public void testDelete() throws Exception {
+		mockMvc.perform(get("/recipe/delete/1"))
+        .andExpect(status().is3xxRedirection())
+        .andExpect(view().name("redirect:/"));
+		
+		verify(recipeService).deleteById(anyLong());
+    }
+	
 
 }

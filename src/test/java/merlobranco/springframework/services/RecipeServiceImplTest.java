@@ -78,7 +78,7 @@ class RecipeServiceImplTest {
 	}
 	
 	@Test
-	void findCommandById() {
+	void testFindCommandById() {
 		// Given
         when(recipeRepository.findById(anyLong())).thenReturn(Optional.of(returnRecipe));
         RecipeCommand recipeCommand = new RecipeCommand();
@@ -93,6 +93,14 @@ class RecipeServiceImplTest {
         verify(recipeRepository, times(1)).findById(anyLong());
         verify(recipeRepository, never()).findAll();
 		
+	}
+	
+	void testDeleteById() {
+		// When
+		recipeService.deleteById(ID);
+		
+		// Then
+		verify(recipeRepository).deleteById(anyLong());
 	}
 	
 }

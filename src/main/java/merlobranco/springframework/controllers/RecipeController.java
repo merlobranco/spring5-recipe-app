@@ -34,10 +34,16 @@ public class RecipeController {
     }
 	
 	@GetMapping("/form/{id}")
-    public String update(@PathVariable(value = "id") String id, Model model){
-        model.addAttribute("recipe", recipeService.findCommandById(Long.valueOf(id)));
+    public String update(@PathVariable(value = "id") Long id, Model model){
+        model.addAttribute("recipe", recipeService.findCommandById(id));
         return  "recipe/recipeForm";
     }
+	
+	@GetMapping("/delete/{id}")
+	public String delete(@PathVariable(value = "id") Long id){
+		recipeService.deleteById(id);
+		return "redirect:/";
+	}
 	
 	
 	@PostMapping("/")
