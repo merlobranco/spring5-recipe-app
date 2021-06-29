@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import lombok.extern.slf4j.Slf4j;
+import merlobranco.springframework.services.IngredientService;
 import merlobranco.springframework.services.RecipeService;
 
 @Slf4j
@@ -15,9 +16,11 @@ import merlobranco.springframework.services.RecipeService;
 public class IngredientController {
 	
 	private final RecipeService recipeService;
+	private final IngredientService ingredientService;
 
-    public IngredientController(RecipeService recipeService) {
+    public IngredientController(RecipeService recipeService, IngredientService ingredientService) {
         this.recipeService = recipeService;
+        this.ingredientService = ingredientService;
     }
 	
 	@GetMapping({"", "/"})
@@ -28,6 +31,14 @@ public class IngredientController {
         model.addAttribute("recipe", recipeService.findCommandById(id));
 
         return "recipe/ingredient/list";
+	}
+	
+	@GetMapping("/{ingredientId}")
+	public String showIngredient(@PathVariable(value = "id") Long id, @PathVariable(value = "ingredientId") Long ingredientId, Model model) {
+
+        model.addAttribute("ingredient", ingredientService.findCommandById(id));
+
+        return "recipe/ingredient/show";
 	}
 
 }
