@@ -1,5 +1,7 @@
 package merlobranco.springframework.services;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -7,7 +9,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,6 +45,28 @@ public static final Long ID = 1L;
 	void setUp() throws Exception {
 		returnIngredient = new Ingredient();
 		returnIngredient.setId(ID);
+	}
+	
+	@Test
+	void testFindCommadsByRecipeId() {
+		// Given
+		Set<Ingredient> returnIngredients = new HashSet<>();
+		returnIngredients.add(returnIngredient);
+		
+		when(ingredientRepository.findByRecipeId(anyLong())).thenReturn(returnIngredients);
+		IngredientCommand ingredientCommand = new IngredientCommand();
+        ingredientCommand.setId(ID);
+        when(ingredientToIngredientCommand.convert(any())).thenReturn(ingredientCommand);
+        
+        // When
+        Set<IngredientCommand> ingredientsCommand = ingredientService.findCommadsByRecipeId(anyLong());
+        
+        // Then
+        assertNotNull(ingredientsCommand, "Null ingredients returned");
+        assertFalse(ingredientsCommand.isEmpty());
+        verify(ingredientRepository, times(1)).findByRecipeId(anyLong());
+        verify(ingredientToIngredientCommand, times(1)).convert(any());
+		
 	}
 	
 	@Test

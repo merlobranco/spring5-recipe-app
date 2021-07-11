@@ -1,6 +1,8 @@
 package merlobranco.springframework.controllers;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -9,17 +11,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.ui.Model;
 
 import merlobranco.springframework.commands.IngredientCommand;
-import merlobranco.springframework.commands.RecipeCommand;
 import merlobranco.springframework.services.IngredientService;
 import merlobranco.springframework.services.RecipeService;
 
@@ -33,6 +39,8 @@ class IngredientControllerTest {
     RecipeService recipeService;
 	@Mock
 	IngredientService ingredientService;
+	@Mock
+	Model model;
 
     MockMvc mockMvc;
 
@@ -43,19 +51,53 @@ class IngredientControllerTest {
 	}
 
 	@Test
+	void testListIngredients() throws Exception {
+		// Given
+		Set<IngredientCommand> ingredientsCommand = new HashSet<>();
+		ingredientsCommand.add(new IngredientCommand());
+				
+		// We cannot pass again a ingredient with empty id
+		// It will be considered the same as the previous one
+		IngredientCommand ingredientCommand = new IngredientCommand();
+		ingredientCommand.setId(1L);
+		ingredientsCommand.add(ingredientCommand);
+		
+		when(ingredientService.findCommadsByRecipeId(anyLong())).thenReturn(ingredientsCommand);
+		ArgumentCaptor<Set<IngredientCommand>> argumentCaptor = ArgumentCaptor.forClass(Set.class);
+		
+		// When
+		String viewName = ingredientController.showIngredients(anyLong(), model);
+		
+		// Then
+		assertEquals("recipe/ingredient/list", viewName);
+		verify(ingredientService, times(1)).findCommadsByRecipeId(anyLong());
+		verify(model, times(1)).addAttribute(eq("ingredients"), argumentCaptor.capture());
+		Set<IngredientCommand> setInController = argumentCaptor.getValue();
+		assertEquals(2, setInController.size());
+	}
+	
+	@Test
 	void testShowIngredients() throws Exception {
 		// Given
-		RecipeCommand recipeCommand = new RecipeCommand();
-		when(recipeService.findCommandById(anyLong())).thenReturn(recipeCommand);
+		Set<IngredientCommand> ingredientsCommand = new HashSet<>();
+		ingredientsCommand.add(new IngredientCommand());
+				
+		// We cannot pass again a ingredient with empty id
+		// It will be considered the same as the previous one
+		IngredientCommand ingredientCommand = new IngredientCommand();
+		ingredientCommand.setId(1L);
+		ingredientsCommand.add(ingredientCommand);
+		
+		when(ingredientService.findCommadsByRecipeId(anyLong())).thenReturn(ingredientsCommand);
 		
 		// When
 		mockMvc.perform(get("/recipe/1/ingredients"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("recipe/ingredient/list"))
-			.andExpect(model().attributeExists("recipe"));
+			.andExpect(model().attributeExists("ingredients"));
       
 	    // Then
-	    verify(recipeService, times(1)).findCommandById(anyLong());
+	    verify(ingredientService, times(1)).findCommadsByRecipeId(anyLong());
 	}
 	
 	@Test
@@ -64,7 +106,7 @@ class IngredientControllerTest {
 		IngredientCommand ingredientCommand = new IngredientCommand();
 		when(ingredientService.findCommandById(anyLong())).thenReturn(ingredientCommand);
 		
-		mockMvc.perform(get("/recipe/1/ingredients/1"))
+		mockMvc.perform(get("/recipe/1/ingredients/show/1"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("recipe/ingredient/show"))
 			.andExpect(model().attributeExists("ingredient"));

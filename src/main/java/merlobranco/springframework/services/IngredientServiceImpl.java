@@ -1,5 +1,9 @@
 package merlobranco.springframework.services;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +26,16 @@ public class IngredientServiceImpl extends JpaService<Ingredient, Long> implemen
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
     }
+    
+    @Override
+    @Transactional(readOnly = true)
+	public Set<IngredientCommand> findCommadsByRecipeId(Long recipeId) {
+		Set<Ingredient> ingredients = ingredientRepository.findByRecipeId(recipeId);
+		if (ingredients == null)
+			return new HashSet<>();
+		
+		return ingredients.stream().map(i -> ingredientToIngredientCommand.convert(i)).collect(Collectors.toSet());
+	}
 
 	@Override
 	@Transactional(readOnly = true)
@@ -29,4 +43,6 @@ public class IngredientServiceImpl extends JpaService<Ingredient, Long> implemen
 		Ingredient ingredient = ingredientRepository.findById(id).orElse(null);
 		return ingredientToIngredientCommand.convert(ingredient);
 	}
+
+	
 }

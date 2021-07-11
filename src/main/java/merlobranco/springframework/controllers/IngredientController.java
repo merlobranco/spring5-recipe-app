@@ -28,15 +28,15 @@ public class IngredientController {
 		log.debug("Getting ingredient list for recipe id: " + id);
 
         // Using Command object to avoid lazy load errors in Thymeleaf.
-        model.addAttribute("recipe", recipeService.findCommandById(id));
+        model.addAttribute("ingredients", ingredientService.findCommadsByRecipeId(id));
 
         return "recipe/ingredient/list";
 	}
 	
-	@GetMapping("/{ingredientId}")
+	@GetMapping("/show/{ingredientId}")
 	public String showIngredient(@PathVariable(value = "id") Long id, @PathVariable(value = "ingredientId") Long ingredientId, Model model) {
 
-        model.addAttribute("ingredient", ingredientService.findCommandById(id));
+        model.addAttribute("ingredient", ingredientService.findCommandById(ingredientId));
 
         return "recipe/ingredient/show";
 	}
