@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import lombok.extern.slf4j.Slf4j;
 import merlobranco.springframework.commands.IngredientCommand;
-import merlobranco.springframework.domain.UnitOfMeasure;
+import merlobranco.springframework.commands.UnitOfMeasureCommand;
 import merlobranco.springframework.services.IngredientService;
 import merlobranco.springframework.services.RecipeService;
 import merlobranco.springframework.services.UnitOfMeasureService;
@@ -36,6 +36,7 @@ public class IngredientController {
 
         // Using Command object to avoid lazy load errors in Thymeleaf.
         model.addAttribute("ingredients", ingredientService.findCommadsByRecipeId(id));
+        model.addAttribute("recipeId", id);
 
         return "recipe/ingredient/list";
 	}
@@ -47,6 +48,17 @@ public class IngredientController {
 
         return "recipe/ingredient/show";
 	}
+	
+	@GetMapping("/form")
+    public String createIngredient(@PathVariable(value = "id") Long id, Model model) {
+		IngredientCommand ingredientCommand = new IngredientCommand();
+		ingredientCommand.setRecipeId(id);
+		ingredientCommand.setUom(new UnitOfMeasureCommand());
+        model.addAttribute("ingredient", ingredientCommand);
+        model.addAttribute("uomList", uomService.findAllCommands());
+        
+        return "recipe/ingredient/form";
+    }
 	
 	@GetMapping("/form/{ingredientId}")
 	public String updateIngredient(@PathVariable(value = "id") Long id, @PathVariable(value = "ingredientId") Long ingredientId, Model model) {

@@ -14,9 +14,15 @@
 <body>
 	<div class="container py-4">
 		<div class="card bg-info text-white">
-
-			<div class="card-header">
-				<h1 class="card-title">My Recipes!</h1>
+			<div class="card-header bg-info text-white">
+				<div class="row">
+                       <div class="col-md-11">
+                           <h1 class="card-title">My Recipes!</h1>
+                       </div>
+                       <div class="col-md-1 mt-2">
+                           <a class="btn btn-light" href="#" th:href="@{'/recipe/form'}" role="button">New</a>
+                       </div>
+                   </div>
 			</div>
 			<div class="card-body bg-white">
 				<div class="table-responsive" th:if="${not #lists.isEmpty(recipes)}">

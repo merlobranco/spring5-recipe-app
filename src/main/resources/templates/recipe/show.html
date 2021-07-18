@@ -13,9 +13,16 @@
 	<div class="container py-4">
 		<div class="card border-info mb-3" style="width: 100%;">
 			<div class="card-header bg-info text-white">
-				<h1 class="card-title" th:text="${recipe.description}">Recipe
-					Description Here!</h1>
+				<div class="row">
+                    <div class="col-md-10">
+                        <h1 class="card-title" th:text="${recipe.description}">Recipe Description Here!</h1>
+                    </div>
+                    <div class="col-md-2 mt-2">
+                        <a class="btn btn-light" href="#" th:href="@{'/'}" role="button">Go to Recipes</a>
+                    </div>
+                </div>
 			</div>
+
 			<div class="card-body">
 				<div class="row">
 					<div class="col-md-3">
@@ -82,7 +89,7 @@
 					<div class="col-md-11">
 						<h1 class="card-title">Ingredients</h1>
 					</div>
-					<div class="col-md-1">
+					<div class="col-md-1 mt-2">
 						<a class="btn btn-light" href="#" th:href="@{'/recipe/' + ${recipe.id} + '/ingredients'}" role="button">View</a>
 					</div>
 				</div>

@@ -84,8 +84,8 @@
 								<div class="col-md-10">
 									<h1 class="card-title">Ingredients</h1>
 								</div>
-								<div class="col-md-2">
-									<a class="btn btn-light" href="#" role="button">View</a>
+								<div class="col-md-2 mt-2">
+									<a th:if="${recipe.id != null}" class="btn btn-light" href="#" th:href="@{'/recipe/' + ${recipe.id} + '/ingredients'}" role="button">View</a>
 								</div>
 							</div>
 						</div>

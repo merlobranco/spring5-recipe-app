@@ -28,8 +28,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import merlobranco.springframework.commands.IngredientCommand;
+import merlobranco.springframework.commands.UnitOfMeasureCommand;
 import merlobranco.springframework.services.IngredientService;
 import merlobranco.springframework.services.RecipeService;
 import merlobranco.springframework.services.UnitOfMeasureService;
@@ -101,7 +103,8 @@ class IngredientControllerTest {
 		mockMvc.perform(get("/recipe/1/ingredients"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("recipe/ingredient/list"))
-			.andExpect(model().attributeExists("ingredients"));
+			.andExpect(model().attributeExists("ingredients"))
+			.andExpect(model().attributeExists("recipeId"));
       
 	    // Then
 	    verify(ingredientService, times(1)).findCommadsByRecipeId(anyLong());
@@ -122,6 +125,19 @@ class IngredientControllerTest {
 		// Then
 		verify(ingredientService, times(1)).findCommandById(anyLong());
 		
+	}
+	
+	@Test
+	void testCreateIngredient() throws Exception {
+		// When
+		when(unitOfMeasureService.findAllCommands()).thenReturn(new HashSet<>());
+		
+		// Then
+        mockMvc.perform(get("/recipe/1/ingredients/form"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("recipe/ingredient/form"))
+                .andExpect(model().attributeExists("ingredient"))
+                .andExpect(model().attributeExists("uomList"));
 	}
 	
 	@Test

@@ -14,10 +14,18 @@
 		<div class="row">
 			<div class="col-md-6 col-md-offset-3">
 				<div class="card border-info mb-3" style="width: 100%;">
-
+				
 					<div class="card-header bg-info text-white">
-						<h1 class="card-title">Ingredient</h1>
+						<div class="row">
+		                    <div class="col-md-8">
+		                        <h1 class="card-title">Ingredient</h1>
+		                    </div>
+		                    <div class="col-md-4 mt-2">
+		                        <a class="btn btn-light" href="#" th:href="@{'/recipe/' + ${ingredient.recipeId} + '/ingredients'}" role="button">Go to Ingredients</a>
+		                    </div>
+		                </div>
 					</div>
+
 					<div class="card-body">
 						<table class="table table-responsive table-hover ">
 							<thead class="thead-inverse">
@@ -34,7 +42,7 @@
 							</tr>
 							<tr>
 								<td th:text="${ingredient.id}">334</td>
-								<td th:text="${ingredient.amount} + ' ' + ${ingredient.uom.getDescription()} + ' ' + ${ingredient.description}">Tasty Goodnees 3</td>
+								<td th:text="${ingredient.amount} + ' ' + ${ingredient.uom.description} + ' ' + ${ingredient.description}">Tasty Goodnees 3</td>
 							</tr>
 						</table>
 					</div>

@@ -14,9 +14,18 @@
 		<div class="row">
 			<div class="col-md-6 col-md-offset-3">
 				<div class="card border-info mb-3" style="width: 100%;">
-
 					<div class="card-header bg-info text-white">
-						<h1 class="card-title">Ingredients</h1>
+						<div class="row">
+	                        <div class="col-md-7">
+	                            <h1 class="card-title">Ingredients</h1>
+	                        </div>
+	                        <div class="col-md-3 mt-2">
+	                            <a class="btn btn-light" href="#" th:href="@{'/recipe/show/' + ${recipeId}}" role="button">Go to Recipe</a>
+	                        </div>
+	                        <div class="col-md-2 mt-2">
+	                            <a class="btn btn-light" href="#" th:href="@{'/recipe/' + ${recipeId} + '/ingredients/form'}" role="button">New</a>
+	                        </div>
+	                    </div>
 					</div>
 					<div class="card-body">
 
