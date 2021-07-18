@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>Edit Ingredient</title>
+<!-- Latest compiled and minified CSS -->
+<link th:href="@{/webjars/bootstrap/5.0.0/css/bootstrap.min.css}"
+	rel="stylesheet">
+<!-- Latest compiled and minified JavaScript -->
+<script th:src="@{/webjars/bootstrap/5.0.0/js/bootstrap.min.js}"></script>
+</head>
+<body>
+	<div class="container py-4">
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+				<!--/*@thymesVar id="ingredient" type="merlobranco.springframework.commands.IngredientCommand"*/-->
+				<form th:object="${ingredient}" th:action="@{'/recipe/' + ${ingredient.getRecipeId()} + '/ingredients'}" method="post">
+					<input type="hidden" th:field="*{id}" />
+					<input type="hidden" th:field="*{recipeId}" />
+					<div class="card border-info mb-3" style="width: 100%;">
+						
+							<div class="card-header bg-info text-white">
+								<h1 class="card-title">Edit Ingredient Information</h1>
+							</div>
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-3 form-group">
+										<label>Description:</label> <input type="text"
+											class="form-control" th:field="*{description}" />
+									</div>
+
+									<div class="col-md-3 form-group">
+										<label>Amount:</label> <input type="number"
+											class="form-control" th:field="*{amount}" />
+									</div>
+
+									<div class="col-md-3 form-group">
+										<label>UOM:</label> <select class="form-control" name="uom.id">
+											<option th:each="uomEach : ${uomList}"
+												th:value="${uomEach.id}"
+												th:selected="${uomEach.id.equals(ingredient.uom.id)}"
+												th:text="${uomEach.description}">Each</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						
+					</div>
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -30,13 +30,13 @@ public class RecipeController {
 	@GetMapping("/form")
     public String create(Model model){
         model.addAttribute("recipe", new RecipeCommand());
-        return "recipe/recipeForm";
+		return "recipe/form";
     }
 	
 	@GetMapping("/form/{id}")
     public String update(@PathVariable(value = "id") Long id, Model model){
         model.addAttribute("recipe", recipeService.findCommandById(id));
-        return  "recipe/recipeForm";
+        return "recipe/form";
     }
 	
 	@GetMapping("/delete/{id}")

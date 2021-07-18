@@ -3,12 +3,17 @@ package merlobranco.springframework.controllers;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import lombok.extern.slf4j.Slf4j;
+import merlobranco.springframework.commands.IngredientCommand;
+import merlobranco.springframework.domain.UnitOfMeasure;
 import merlobranco.springframework.services.IngredientService;
 import merlobranco.springframework.services.RecipeService;
+import merlobranco.springframework.services.UnitOfMeasureService;
 
 @Slf4j
 @Controller
@@ -17,10 +22,12 @@ public class IngredientController {
 	
 	private final RecipeService recipeService;
 	private final IngredientService ingredientService;
+	private final UnitOfMeasureService uomService;
 
-    public IngredientController(RecipeService recipeService, IngredientService ingredientService) {
+    public IngredientController(RecipeService recipeService, IngredientService ingredientService, UnitOfMeasureService uomService) {
         this.recipeService = recipeService;
         this.ingredientService = ingredientService;
+		this.uomService = uomService;
     }
 	
 	@GetMapping({"", "/"})
@@ -40,5 +47,20 @@ public class IngredientController {
 
         return "recipe/ingredient/show";
 	}
+	
+	@GetMapping("/form/{ingredientId}")
+	public String updateIngredient(@PathVariable(value = "id") Long id, @PathVariable(value = "ingredientId") Long ingredientId, Model model) {
+
+        model.addAttribute("ingredient", ingredientService.findCommandById(ingredientId));
+        model.addAttribute("uomList", uomService.findAllCommands());
+
+        return "recipe/ingredient/form";
+	}
+	
+	@PostMapping({"", "/"})
+    public String saveIngredient(@ModelAttribute IngredientCommand command){
+		IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command);
+        return "redirect:/recipe/" + savedCommand.getRecipeId() + "/ingredients/show/" + savedCommand.getId();
+    }
 
 }

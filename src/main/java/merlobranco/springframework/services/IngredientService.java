@@ -10,5 +10,7 @@ public interface IngredientService extends CrudService<Ingredient, Long> {
 	Set<IngredientCommand> findCommadsByRecipeId(Long recipeId);
 	
 	IngredientCommand findCommandById(Long id);
+	
+	IngredientCommand saveIngredientCommand(IngredientCommand command);
 
 }

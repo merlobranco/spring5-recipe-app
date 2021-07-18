@@ -7,23 +7,25 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.extern.slf4j.Slf4j;
 import merlobranco.springframework.commands.IngredientCommand;
+import merlobranco.springframework.converters.IngredientCommandToIngredient;
 import merlobranco.springframework.converters.IngredientToIngredientCommand;
 import merlobranco.springframework.domain.Ingredient;
 import merlobranco.springframework.repositories.IngredientRepository;
-import merlobranco.springframework.repositories.RecipeRepository;
 
+@Slf4j
 @Service
 public class IngredientServiceImpl extends JpaService<Ingredient, Long> implements IngredientService {
 	
 	private final IngredientToIngredientCommand ingredientToIngredientCommand;
-	private final RecipeRepository recipeRepository;
+	private final IngredientCommandToIngredient ingredientCommandToIngredient;
 	private final IngredientRepository ingredientRepository;
 
-    public IngredientServiceImpl(IngredientToIngredientCommand ingredientToIngredientCommand, RecipeRepository recipeRepository, IngredientRepository ingredientRepository) {
+    public IngredientServiceImpl(IngredientToIngredientCommand ingredientToIngredientCommand, IngredientCommandToIngredient ingredientCommandToIngredient, IngredientRepository ingredientRepository) {
         super(ingredientRepository);
     	this.ingredientToIngredientCommand = ingredientToIngredientCommand;
-        this.recipeRepository = recipeRepository;
+		this.ingredientCommandToIngredient = ingredientCommandToIngredient;
         this.ingredientRepository = ingredientRepository;
     }
     
@@ -44,5 +46,13 @@ public class IngredientServiceImpl extends JpaService<Ingredient, Long> implemen
 		return ingredientToIngredientCommand.convert(ingredient);
 	}
 
-	
+	@Override
+	@Transactional
+	public IngredientCommand saveIngredientCommand(IngredientCommand command) {
+		Ingredient detachedIngredient = ingredientCommandToIngredient.convert(command);
+		Ingredient savedIngredient = ingredientRepository.save(detachedIngredient);
+		log.debug("Saved Ingredient Id: " + savedIngredient.getId());
+		
+		return ingredientToIngredientCommand.convert(savedIngredient);
+	}
 }

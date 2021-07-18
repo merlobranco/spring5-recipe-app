@@ -1,6 +1,5 @@
 package merlobranco.springframework.services;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,7 +27,7 @@ import merlobranco.springframework.repositories.IngredientRepository;
 @ExtendWith(MockitoExtension.class)
 class IngredientServiceImplTest {
 	
-public static final Long ID = 1L;
+	public static final Long ID = 1L;
 	
 	@Mock
 	IngredientRepository ingredientRepository;
