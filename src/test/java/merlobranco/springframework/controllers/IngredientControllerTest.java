@@ -2,8 +2,8 @@ package merlobranco.springframework.controllers;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -28,12 +28,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import merlobranco.springframework.commands.IngredientCommand;
-import merlobranco.springframework.commands.UnitOfMeasureCommand;
 import merlobranco.springframework.services.IngredientService;
-import merlobranco.springframework.services.RecipeService;
 import merlobranco.springframework.services.UnitOfMeasureService;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,8 +39,6 @@ class IngredientControllerTest {
 	@InjectMocks
 	IngredientController ingredientController;
 	
-	@Mock
-    RecipeService recipeService;
 	@Mock
 	IngredientService ingredientService;
 	@Mock
@@ -55,7 +50,7 @@ class IngredientControllerTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
-		ingredientController = new IngredientController(recipeService, ingredientService, unitOfMeasureService);
+		ingredientController = new IngredientController(ingredientService, unitOfMeasureService);
 		mockMvc = MockMvcBuilders.standaloneSetup(ingredientController).build();
 	}
 
@@ -175,5 +170,14 @@ class IngredientControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/recipe/2/ingredients/show/3"));
 	}
+	
+	@Test
+    public void testDeleteIngredient() throws Exception {
+		mockMvc.perform(get("/recipe/1/ingredients/delete/1"))
+        .andExpect(status().is3xxRedirection())
+        .andExpect(view().name("redirect:/recipe/1/ingredients"));
+		
+		verify(ingredientService).deleteById(anyLong());
+    }
 
 }

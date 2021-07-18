@@ -9,4 +9,5 @@ import merlobranco.springframework.domain.Ingredient;
 public interface IngredientRepository extends CrudRepository<Ingredient, Long> {
 	
 	public Set<Ingredient> findByRecipeId(Long recipeId);
+	
 }

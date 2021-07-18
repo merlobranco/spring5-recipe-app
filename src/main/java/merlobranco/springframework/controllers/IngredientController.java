@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import merlobranco.springframework.commands.IngredientCommand;
 import merlobranco.springframework.commands.UnitOfMeasureCommand;
 import merlobranco.springframework.services.IngredientService;
-import merlobranco.springframework.services.RecipeService;
 import merlobranco.springframework.services.UnitOfMeasureService;
 
 @Slf4j
@@ -20,12 +19,10 @@ import merlobranco.springframework.services.UnitOfMeasureService;
 @RequestMapping("/recipe/{id}/ingredients")
 public class IngredientController {
 	
-	private final RecipeService recipeService;
 	private final IngredientService ingredientService;
 	private final UnitOfMeasureService uomService;
 
-    public IngredientController(RecipeService recipeService, IngredientService ingredientService, UnitOfMeasureService uomService) {
-        this.recipeService = recipeService;
+    public IngredientController(IngredientService ingredientService, UnitOfMeasureService uomService) {
         this.ingredientService = ingredientService;
 		this.uomService = uomService;
     }
@@ -74,5 +71,11 @@ public class IngredientController {
 		IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command);
         return "redirect:/recipe/" + savedCommand.getRecipeId() + "/ingredients/show/" + savedCommand.getId();
     }
+	
+	@GetMapping("/delete/{ingredientId}")
+	public String deleteIngredient(@PathVariable(value = "id") Long id, @PathVariable(value = "ingredientId") Long ingredientId){
+		ingredientService.deleteById(ingredientId);
+		return "redirect:/recipe/" + id + "/ingredients";
+	}
 
 }
